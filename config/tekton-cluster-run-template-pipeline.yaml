@@ -16,3 +16,14 @@ spec:
       params: $(runnable.spec.inputs.tekton-params)$
       pipelineRef:
         name: tekton-pipeline
+      podTemplate:
+        volumes:
+        - name: podinfo
+          downwardAPI:
+            items:
+            - path: "labels"
+              fieldRef:
+                fieldPath: metadata.labels
+            - path: "annotations"
+              fieldRef:
+                fieldPath: metadata.annotations    

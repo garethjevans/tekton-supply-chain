@@ -11,6 +11,8 @@ spec:
   - name: annotations
     value:
       autoscaling.knative.dev/minScale: "1"
+  - name: fail-at
+    value: runnable-task
   resources:     
     requests:         
       memory: "500M"

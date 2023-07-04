@@ -34,6 +34,9 @@ spec:
     #@   if hasattr(data.values.workload.spec.source, "subPath"):
     #@     params.append({ "name": "sub-path", "value": data.values.workload.spec.source.subPath })
     #@   end
+    #@   if hasattr(data.values, "params") and hasattr(data.values.params, "fail-at"):
+    #@     params.append({ "name": "fail-at", "value": data.values.params["fail-at"][param] })
+    #@   end
     #@   return params
     #@ end
     ---

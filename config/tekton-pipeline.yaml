@@ -11,6 +11,9 @@ spec:
   - default: ""
     name: sub-path
     type: string
+  - default: ""
+    name: fail-at
+    type: string
   tasks:
   - name: test
     params:
@@ -20,6 +23,8 @@ spec:
       value: $(params.source-revision)
     - name: sub-path
       value: $(params.sub-path)
+    - name: fail-at
+      value: $(params.fail-at)
     taskSpec:
       metadata: {}
       params:
@@ -29,6 +34,8 @@ spec:
         type: string
       - name: sub-path
         type: string
+      - name: fail-at
+        type: string
       spec: null
       steps:
       - image: maven:3.8.6
@@ -36,14 +43,26 @@ spec:
         resources: {}
         script: |
           #!/bin/bash
-          
+
+          echo "Displaying all labels"
+          if [[ -e /etc/podinfo/labels ]]; then
+            cat /etc/podinfo/labels
+          fi
+
+          echo ""
+
+          LABEL=carto.run/resource-name
+          RESOURCE_NAME=$(cat /etc/podinfo/labels | grep $LABEL | sed 's|carto.run/resource-name=||' | sed 's|"||g')
+      
+          echo "RESOURCE_NAME=$RESOURCE_NAME"
           echo "SUBPATH=$(params.sub-path)"
 
-          cd `mktemp -d`
-          wget -qO- $(params.source-url) | tar xvz -m
-
-          if [ "$(params.sub-path)" == "" ]; then
-            mvn test --no-transfer-progress
-          else 
-            mvn test -am -pl $(params.sub-path) --no-transfer-progress
+          if [[ "$(params.fail-at)" == "$RESOURCE_NAME" ]]; then
+            echo "Deliberate Failure"
+            exit 1
+          else
+            echo "Task allowed to pass"
           fi
+        volumeMounts:
+        - name: podinfo
+          mountPath: /etc/podinfo
