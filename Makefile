@@ -15,3 +15,10 @@ delete-%:
 apply: delete-runnable-task delete-norunnable-task delete-runnable-pipeline delete-norunnable-pipeline delete-nothing create-runnable-task create-norunnable-task create-runnable-pipeline create-norunnable-pipeline create-nothing
 	ytt --ignore-unknown-comments --file ./config --data-values-file values.yaml | kubectl apply -f -
 	kubectl delete workload tekton-pipeline-test-app-parallel-stages --ignore-not-found
+
+debug-%:
+	@echo "Debugging tekton-pipeline-fails-at-$*"
+	tanzu apps workload get tekton-pipeline-fails-at-$* | grep " $* "
+	@echo ""
+
+debug: debug-runnable-task debug-norunnable-task debug-runnable-pipeline debug-norunnable-pipeline

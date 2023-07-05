@@ -28,7 +28,7 @@ spec:
         - name: sub-path
           value: $(workload.spec.source.subPath)$
         - name: fail-at
-          value: $(workload.params.fail-at)$
+          value: $(params.fail-at)$
       podTemplate:
         volumes:
         - name: podinfo
