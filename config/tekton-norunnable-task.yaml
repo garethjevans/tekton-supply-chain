@@ -27,6 +27,19 @@ spec:
           value: $(source.revision)$
         - name: sub-path
           value: $(workload.spec.source.subPath)$
+        - name: fail-at
+          value: $(params.fail-at)$
+      podTemplate:
+        volumes:
+        - name: podinfo
+          downwardAPI:
+            items:
+            - path: "labels"
+              fieldRef:
+                fieldPath: metadata.labels
+            - path: "annotations"
+              fieldRef:
+                fieldPath: metadata.annotations    
 
   urlPath: .spec.params[0].value
   revisionPath: .spec.params[1].value
